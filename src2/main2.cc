@@ -1,104 +1,116 @@
 #include <iostream>
 #include <queue>
 #include <string>
+#include <limits>
+
 struct Doc {
   std::string Nombre;
   std::string Contenido;
 };
 
-void MenuPrinsipal();
-void AñadirArchivo(std::queue<Doc>& NuevoDoc);
-void EliminarDoc(std::queue<Doc>& NuevoDoc);
-void MostrarDoc(std::queue<Doc>& NuevoDoc);
+void MenuPrincipal();
+void AgregarArchivo(std::queue<Doc>& NuevoDoc);
+void EliminarArchivo(std::queue<Doc>& NuevoDoc);
+void MostrarArchivo(std::queue<Doc>& NuevoDoc);
 
 int main(int argc, char* argv[]) {
   std::queue<Doc> NuevoDoc;
-  int respuesta_menu;
+  int opcion;
   do {
-    MenuPrinsipal();
-    std::cin >> respuesta_menu;
-    switch (respuesta_menu) {
+    MenuPrincipal();
+    std::cin >> opcion;
+    switch (opcion) {
       case 1:
-        system("cls");
-        AñadirArchivo(NuevoDoc);
+        AgregarArchivo(NuevoDoc);
         break;
 
       case 2:
-        system("cls");
-        MostrarDoc(NuevoDoc);
+        MostrarArchivo(NuevoDoc);
         break;
 
       case 3:
-        system("cls");
-        EliminarDoc(NuevoDoc);
+        EliminarArchivo(NuevoDoc);
         break;
 
-      case 0:
-        system("cls");
+      case 4:
         std::cout << "Gracias buen dia" << std::endl;
         system("pause");
         break;
 
       default:
-        system("cls");
-        std::cout << "la opcion seleccionada no exite vuelve a intentarlo"
-                  << std::endl;
+        std::cout << "La opcion seleccionada no existe. Intentelo nuevamente." << std::endl;
+        std::cout << "Opciones validas: 1, 2, 3, 4." << std::endl;
         system("pause");
         break;
     }
-  } while (respuesta_menu != 0);
+  } while (opcion != 4);
 
+  return 0;
 }
 
-void AñadirArchivo(std::queue<Doc>& NuevoDoc) {//crea solo crear
+void AgregarArchivo(std::queue<Doc>& NuevoDoc) {
   Doc nuevodoc;
-  std::cout << "ingrese el nombre del cocumento\n";
-  std::cin >> nuevodoc.Nombre;
-  std::cout << "\n";
-  std::cout << "ingrese el contenido del cocumento\n";
-  std::cin >> nuevodoc.Contenido;
-  std::cout << "\n";
-  NuevoDoc.push(nuevodoc);
+  std::cin.ignore(std::numeric_limits<std::streamsize>::max(), '\n');
+  std::cout << "Ingrese el nombre del documento: ";
+  std::getline(std::cin, nuevodoc.Nombre);
+  std::cin.ignore(std::numeric_limits<std::streamsize>::max(), '\n'); // Limpiar el buffer
+  std::cout << "Ingrese el contenido del documento: ";
+  std::getline(std::cin, nuevodoc.Contenido);
+  std::cin.ignore(std::numeric_limits<std::streamsize>::max(), '\n');
+  NuevoDoc.push(nuevodoc); // Agregar el documento a la cola
+  std::cout << "Documento agregado." << std::endl;
 }
 
-void EliminarDoc(std::queue<Doc>& NuevoDoc) {
+void EliminarArchivo(std::queue<Doc>& NuevoDoc) {
   if (NuevoDoc.empty()) {
-    std::cout << "este Documento no existe";
-  }
-  Doc documento = NuevoDoc.front();//esto copia contenido del doc para que el usuraio vea el usuraio par que este segruo de borrarlo
-  std::cout << "Nombre:\n" << documento.Nombre << std::endl;
-  std::cout << "Contenido\n" << documento.Contenido << std::endl;
-  int respuesta;
-  std::cout<<"desea eliminar este documento\n";// Confirmacion clasica para ver si elimina el archivo
-  std::cout<<"1. Si\n";
-  std::cout<<"2. NO\n";
-  std::cin>>respuesta;
-  if (respuesta=1){
-    NuevoDoc.pop();
-  }
-  std::cout<<"Regrasando";
-}
-
-void MostrarDoc(std::queue<Doc>& NuevoDoc){
-if (NuevoDoc.empty()) {
-    std::cout << "La cola esta vacia." << std::endl;
+    std::cout << "Este documento no existe." << std::endl;
     return;
   }
-  std::queue<Doc> temp = NuevoDoc;  // Crea una copia de la pila temporal solo para mostrar 
-  std::cout << "Elementos en la cola: ";
+  Doc documento = NuevoDoc.front();  // Copia el contenido del documento
+  std::cout << "Nombre: " << documento.Nombre << std::endl;
+  std::cout << "Contenido: " << documento.Contenido << std::endl;
+  int respuesta;
+  std::cout << "Si desea eliminar el documento presione 1 y si lo quiere conservar presione 2: ";
+  std::cin >> respuesta;  // Pedir respuesta al usuario
+
+  if (respuesta == 1) {
+    NuevoDoc.pop();  // Eliminar el documento
+    std::cout << "Documento eliminado." << std::endl;
+  } else {
+    std::cout << "No se elimino el documento." << std::endl;
+  }
+}
+
+void MostrarArchivo(std::queue<Doc>& NuevoDoc) {
+  if (NuevoDoc.empty()) {
+    std::cout << "No hay documentos para imprimir." << std::endl;
+    return;
+  }
+
+  // Mostrar el documento que se está imprimiendo
+  Doc documentoActual = NuevoDoc.front();
+  std::cout << "Documento actual (en impresion):\n";
+  std::cout << "Nombre: " << documentoActual.Nombre << std::endl;
+  std::cout << "Contenido: " << documentoActual.Contenido << std::endl;
+  std::cout << std::endl;
+
+  // Mostrar los documentos en espera
+  std::queue<Doc> temp = NuevoDoc;  // Crea una copia de la cola para mostrar
+  temp.pop();  // Elimina el documento que se está imprimiendo de la copia
+  std::cout << "Documentos en espera:\n";
   while (!temp.empty()) {
-    std::cout << temp.front().Nombre << " ";
-    std::cout << temp.front().Contenido << " ";
-    temp.pop();  // Elimina la lista temporal que se creo
+    std::cout << "Nombre: " << temp.front().Nombre << std::endl;
+    std::cout << "Contenido: " << temp.front().Contenido << std::endl;
+    temp.pop();  // Elimina la lista temporal que se creó
   }
   std::cout << std::endl;
 }
 
-void MenuPrinsipal(){// Menu uno
-  std::cout << "Menu prinsipal" << std::endl;
-  std::cout << "que deseas hacer?" << std::endl;
-  std::cout << "\n 1 Anadir archivos" << std::endl;
-  std::cout << "2 Ver archivos" << std::endl;
-  std::cout << "3 Eliminar archivos" << std::endl;
-  std::cout << "0 Salir" << std::endl;
+void MenuPrincipal() {  // Menu uno
+  std::cout << "Menu principal" << std::endl;
+  std::cout << "1. Agregar archivos" << std::endl;
+  std::cout << "2. Ver archivos" << std::endl;
+  std::cout << "3. Eliminar archivos" << std::endl;
+  std::cout << "4. Salir" << std::endl;
+  std::cout << "Ingrese la opcion que desea realizar" << std::endl;
 }
