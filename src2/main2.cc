@@ -58,6 +58,7 @@ void AñadirArchivo(std::queue<Doc>& NuevoDoc) {//crea solo crear
   std::cout << "ingrese el contenido del cocumento\n";
   std::cin >> nuevodoc.Contenido;
   std::cout << "\n";
+  NuevoDoc.push(nuevodoc);
 }
 
 void EliminarDoc(std::queue<Doc>& NuevoDoc) {
@@ -71,6 +72,7 @@ void EliminarDoc(std::queue<Doc>& NuevoDoc) {
   std::cout<<"desea eliminar este documento\n";// Confirmacion clasica para ver si elimina el archivo
   std::cout<<"1. Si\n";
   std::cout<<"2. NO\n";
+  std::cin>>respuesta;
   if (respuesta=1){
     NuevoDoc.pop();
   }
@@ -95,7 +97,7 @@ if (NuevoDoc.empty()) {
 void MenuPrinsipal(){// Menu uno
   std::cout << "Menu prinsipal" << std::endl;
   std::cout << "que deseas hacer?" << std::endl;
-  std::cout << "\n 1 Añadir archivos" << std::endl;
+  std::cout << "\n 1 Anadir archivos" << std::endl;
   std::cout << "2 Ver archivos" << std::endl;
   std::cout << "3 Eliminar archivos" << std::endl;
   std::cout << "0 Salir" << std::endl;
